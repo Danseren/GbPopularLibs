@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="tv_counter">Counter</string>
+    <string name="btn_first_counter">First counter</string>
+    <string name="btn_second_counter">Second counter</string>
+    <string name="btn_third_counter">Third counter</string>
+</resources>
