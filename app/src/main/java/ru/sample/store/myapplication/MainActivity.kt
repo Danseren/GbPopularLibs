@@ -5,55 +5,46 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import ru.sample.store.myapplication.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainView {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val counters = mutableListOf(0, 0, 0)
+    private lateinit var presenter: CountersPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initPresenter()
+
         with(binding) {
             btnFirstCounter.setOnClickListener {
-                tvFirstCounter.text = (++counters[0]).toString()
+                presenter.onCounterClick(R.id.btnFirstCounter)
             }
 
             btnSecondCounter.setOnClickListener {
-                tvSecondCounter.text = (++counters[1]).toString()
+                presenter.onCounterClick(R.id.btnSecondCounter)
             }
 
             btnThirdCounter.setOnClickListener {
-                tvThirdCounter.text = (++counters[2]).toString()
+                presenter.onCounterClick(R.id.btnThirdCounter)
             }
         }
     }
 
-    private fun initView() {
+    private fun initPresenter() {
+        presenter = CountersPresenter(this)
+    }
+
+    override fun setText(counter: String, position: Int) {
         with(binding) {
-            tvFirstCounter.text = counters[0].toString()
-            tvSecondCounter.text = counters[1].toString()
-            tvThirdCounter.text = counters[2].toString()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putIntArray("counters", counters.toIntArray())
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        val array = savedInstanceState.getIntArray("counters")
-        counters.let { list ->
-            list.clear()
-            array?.toList()?.let {
-                list.addAll(it)
+            when (position) {
+                0 -> tvFirstCounter.text = counter
+                1 -> tvSecondCounter.text = counter
+                2 -> tvThirdCounter.text = counter
             }
         }
-
-        initView()
     }
+
 }
