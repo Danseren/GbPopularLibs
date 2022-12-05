@@ -1,9 +1,12 @@
-package ru.sample.store.myapplication
+package ru.sample.store.myapplication.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import ru.sample.store.myapplication.databinding.ActivityMainBinding
+import ru.sample.store.myapplication.presenter.CountersPresenter
+import ru.sample.store.myapplication.utils.FIRST_POSITION
+import ru.sample.store.myapplication.utils.SECOND_POSITION
+import ru.sample.store.myapplication.utils.THIRD_POSITION
 
 class MainActivity : AppCompatActivity(), MainView {
 
@@ -20,15 +23,15 @@ class MainActivity : AppCompatActivity(), MainView {
 
         with(binding) {
             btnFirstCounter.setOnClickListener {
-                presenter.onCounterClick(R.id.btnFirstCounter)
+                presenter.onFirstCounterClick()
             }
 
             btnSecondCounter.setOnClickListener {
-                presenter.onCounterClick(R.id.btnSecondCounter)
+                presenter.onSecondCounterClick()
             }
 
             btnThirdCounter.setOnClickListener {
-                presenter.onCounterClick(R.id.btnThirdCounter)
+                presenter.onThirdCounterClick()
             }
         }
     }
@@ -40,9 +43,9 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun setText(counter: String, position: Int) {
         with(binding) {
             when (position) {
-                0 -> tvFirstCounter.text = counter
-                1 -> tvSecondCounter.text = counter
-                2 -> tvThirdCounter.text = counter
+                FIRST_POSITION -> tvFirstCounter.text = counter
+                SECOND_POSITION -> tvSecondCounter.text = counter
+                THIRD_POSITION -> tvThirdCounter.text = counter
             }
         }
     }

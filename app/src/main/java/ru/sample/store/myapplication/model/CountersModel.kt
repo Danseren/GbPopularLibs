@@ -1,8 +1,10 @@
-package ru.sample.store.myapplication
+package ru.sample.store.myapplication.model
+
+import ru.sample.store.myapplication.utils.START_VALUE
 
 class CountersModel {
 
-    private val counters = mutableListOf(0, 0, 0)
+    private val counters = mutableListOf(START_VALUE, START_VALUE, START_VALUE)
 
     fun getCurrent(position: Int): Int {
         return counters[position]

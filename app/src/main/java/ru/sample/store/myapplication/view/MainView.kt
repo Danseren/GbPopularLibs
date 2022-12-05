@@ -1,4 +1,4 @@
-package ru.sample.store.myapplication
+package ru.sample.store.myapplication.view
 
 interface MainView {
 
