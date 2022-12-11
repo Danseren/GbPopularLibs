@@ -1,25 +1,25 @@
 package ru.sample.store.myapplication.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import moxy.MvpAppCompatActivity
+import moxy.ktx.moxyPresenter
+import ru.sample.store.myapplication.R
 import ru.sample.store.myapplication.databinding.ActivityMainBinding
+import ru.sample.store.myapplication.model.CountersModel
 import ru.sample.store.myapplication.presenter.CountersPresenter
-import ru.sample.store.myapplication.utils.FIRST_POSITION
-import ru.sample.store.myapplication.utils.SECOND_POSITION
-import ru.sample.store.myapplication.utils.THIRD_POSITION
 
-class MainActivity : AppCompatActivity(), MainView {
+class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainView {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var presenter: CountersPresenter
+    private val presenter by moxyPresenter {
+        CountersPresenter(CountersModel())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        initPresenter()
 
         with(binding) {
             btnFirstCounter.setOnClickListener {
@@ -36,18 +36,16 @@ class MainActivity : AppCompatActivity(), MainView {
         }
     }
 
-    private fun initPresenter() {
-        presenter = CountersPresenter(this)
+    override fun setFirstCounter(counter: String) = with(binding) {
+        tvFirstCounter.text = counter
     }
 
-    override fun setText(counter: String, position: Int) {
-        with(binding) {
-            when (position) {
-                FIRST_POSITION -> tvFirstCounter.text = counter
-                SECOND_POSITION -> tvSecondCounter.text = counter
-                THIRD_POSITION -> tvThirdCounter.text = counter
-            }
-        }
+    override fun setSecondCounter(counter: String) = with(binding) {
+        tvSecondCounter.text = counter
+    }
+
+    override fun setThirdCounter(counter: String) = with(binding) {
+        tvThirdCounter.text = counter
     }
 
 }

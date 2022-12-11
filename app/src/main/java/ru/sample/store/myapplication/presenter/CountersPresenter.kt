@@ -1,24 +1,28 @@
 package ru.sample.store.myapplication.presenter
 
+import moxy.MvpPresenter
 import ru.sample.store.myapplication.view.MainView
 import ru.sample.store.myapplication.model.CountersModel
 import ru.sample.store.myapplication.utils.FIRST_POSITION
 import ru.sample.store.myapplication.utils.SECOND_POSITION
 import ru.sample.store.myapplication.utils.THIRD_POSITION
 
-class CountersPresenter(private val view: MainView) {
+class CountersPresenter(
+    private val model: CountersModel
+): MvpPresenter<MainView>() {
 
-    private val model = CountersModel()
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        //INIT
+    }
 
     fun onFirstCounterClick() {
-        view.setText(model.next(FIRST_POSITION).toString(), FIRST_POSITION)
+        viewState.setFirstCounter(model.next(FIRST_POSITION).toString())
     }
 
     fun onSecondCounterClick() {
-        view.setText(model.next(SECOND_POSITION).toString(), SECOND_POSITION)
-    }
+        viewState.setSecondCounter(model.next(SECOND_POSITION).toString())    }
 
     fun onThirdCounterClick() {
-        view.setText(model.next(THIRD_POSITION).toString(), THIRD_POSITION)
-    }
+        viewState.setThirdCounter(model.next(THIRD_POSITION).toString())    }
 }
