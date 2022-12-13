@@ -4,4 +4,5 @@
     <string name="btn_first_counter">First counter</string>
     <string name="btn_second_counter">Second counter</string>
     <string name="btn_third_counter">Third counter</string>
+    <string name="tv_user_login_tools">Some User</string>
 </resources>

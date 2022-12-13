@@ -1,8 +1,8 @@
-package ru.sample.store.myapplication.model
+package ru.sample.store.myapplication.repository.impl
 
 import ru.sample.store.myapplication.utils.START_VALUE
 
-class CountersModel {
+class CountersRepository {
 
     private val counters = mutableListOf(START_VALUE, START_VALUE, START_VALUE)
 

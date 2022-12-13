@@ -1,19 +1,23 @@
 package ru.sample.store.myapplication.view
 
 import android.os.Bundle
+import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
+import ru.sample.store.myapplication.GeekBrainsApp
 import ru.sample.store.myapplication.R
+import ru.sample.store.myapplication.core.BackPressedListener
+import ru.sample.store.myapplication.core.navigation.UsersScreen
 import ru.sample.store.myapplication.databinding.ActivityMainBinding
-import ru.sample.store.myapplication.model.CountersModel
-import ru.sample.store.myapplication.presenter.CountersPresenter
+import ru.sample.store.myapplication.presenter.MainPresenter
 
-class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainView {
+class MainActivity : MvpAppCompatActivity(), MainView {
 
     private lateinit var binding: ActivityMainBinding
+    private val navigator = AppNavigator(this, R.id.containerMain)
 
     private val presenter by moxyPresenter {
-        CountersPresenter(CountersModel())
+        MainPresenter(GeekBrainsApp.instance.router, UsersScreen)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,31 +25,24 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainView {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        with(binding) {
-            btnFirstCounter.setOnClickListener {
-                presenter.onFirstCounterClick()
-            }
+    }
 
-            btnSecondCounter.setOnClickListener {
-                presenter.onSecondCounterClick()
-            }
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        GeekBrainsApp.instance.navigationHolder.setNavigator(navigator)
+    }
 
-            btnThirdCounter.setOnClickListener {
-                presenter.onThirdCounterClick()
+    override fun onPause() {
+        super.onPause()
+        GeekBrainsApp.instance.navigationHolder.removeNavigator()
+    }
+
+    override fun onBackPressed() {
+        supportFragmentManager.fragments.forEach { currentFragment ->
+            if (currentFragment is BackPressedListener && currentFragment.onBackPressed()) {
+                return
             }
         }
+        presenter.onBackPressed()
     }
-
-    override fun setFirstCounter(counter: String) = with(binding) {
-        tvFirstCounter.text = counter
-    }
-
-    override fun setSecondCounter(counter: String) = with(binding) {
-        tvSecondCounter.text = counter
-    }
-
-    override fun setThirdCounter(counter: String) = with(binding) {
-        tvThirdCounter.text = counter
-    }
-
 }

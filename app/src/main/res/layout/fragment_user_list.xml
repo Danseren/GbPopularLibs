@@ -8,8 +8,8 @@
     android:gravity="center"
     tools:context=".view.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/containerMain"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGithubUsers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
