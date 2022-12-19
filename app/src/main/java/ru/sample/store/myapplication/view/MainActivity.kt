@@ -7,7 +7,6 @@ import moxy.ktx.moxyPresenter
 import ru.sample.store.myapplication.GeekBrainsApp
 import ru.sample.store.myapplication.R
 import ru.sample.store.myapplication.core.BackPressedListener
-import ru.sample.store.myapplication.core.navigation.UsersScreen
 import ru.sample.store.myapplication.databinding.ActivityMainBinding
 import ru.sample.store.myapplication.presenter.MainPresenter
 
@@ -17,7 +16,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     private val navigator = AppNavigator(this, R.id.containerMain)
 
     private val presenter by moxyPresenter {
-        MainPresenter(GeekBrainsApp.instance.router, UsersScreen)
+        MainPresenter(GeekBrainsApp.instance.router)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
