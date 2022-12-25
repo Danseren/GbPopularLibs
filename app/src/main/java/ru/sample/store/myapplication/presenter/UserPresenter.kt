@@ -23,7 +23,7 @@ class UserPresenter(
             val user = userListPresenter.users[itemView.pos]
             val bundle = Bundle()
             bundle.putParcelable(USER_KEY, user)
-            router.navigateTo(UsersScreen().userInfo(bundle))
+            router.navigateTo(UsersScreen().userInfo(user))
         }
     }
 

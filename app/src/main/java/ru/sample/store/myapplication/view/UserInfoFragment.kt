@@ -15,8 +15,13 @@ import ru.sample.store.myapplication.utils.USER_KEY
 class UserInfoFragment: MvpAppCompatFragment(), UserInfoView{
 
     companion object{
-        fun getInstance(): UserInfoFragment {
-            return UserInfoFragment()
+        fun getInstance(user: GithubUser): UserInfoFragment {
+
+            val fragment = UserInfoFragment()
+            val bundle = Bundle()
+            bundle.putParcelable(USER_KEY, user)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
