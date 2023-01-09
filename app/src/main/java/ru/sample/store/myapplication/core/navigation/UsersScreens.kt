@@ -12,9 +12,9 @@ class UsersScreen : IScreens {
         UserListFragment.getInstance()
     }
 
-    override fun userInfo(user: GithubUser): FragmentScreen =
+    override fun userInfo(login: String): FragmentScreen =
         FragmentScreen(USER_KEY) {
-            UserInfoFragment.getInstance(user)
+            UserInfoFragment.getInstance(login)
     }
 
 }

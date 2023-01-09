@@ -6,22 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.sample.store.myapplication.GeekBrainsApp
+import ru.sample.store.myapplication.core.BackPressedListener
+import ru.sample.store.myapplication.core.network.NetworkProvider
 import ru.sample.store.myapplication.databinding.FragmentUserInfoBinding
 import ru.sample.store.myapplication.model.GithubUser
 import ru.sample.store.myapplication.presenter.UserInfoPresenter
-import ru.sample.store.myapplication.utils.NO_LOGIN
-import ru.sample.store.myapplication.utils.USER_KEY
+import ru.sample.store.myapplication.repository.impl.GithubRepositoryImpl
+import ru.sample.store.myapplication.utils.*
 
-class UserInfoFragment: MvpAppCompatFragment(), UserInfoView{
+class UserInfoFragment : MvpAppCompatFragment(), UserInfoView, BackPressedListener {
 
     companion object{
-        fun getInstance(user: GithubUser): UserInfoFragment {
-
-            val fragment = UserInfoFragment()
-            val bundle = Bundle()
-            bundle.putParcelable(USER_KEY, user)
-            fragment.arguments = bundle
-            return fragment
+        fun getInstance(login: String): UserInfoFragment {
+            return UserInfoFragment().apply {
+                arguments = Bundle().apply {
+                    putString(USER_KEY, login)
+                }
+            }
         }
     }
 
@@ -31,11 +33,11 @@ class UserInfoFragment: MvpAppCompatFragment(), UserInfoView{
             return _viewBinding!!
         }
 
-    val presenter by moxyPresenter { UserInfoPresenter(getUserInfo()) }
-
-    private fun getUserInfo(): GithubUser {
-        val user = this.arguments?.getParcelable(USER_KEY) as? GithubUser
-        return user ?: GithubUser(NO_LOGIN)
+    val presenter by moxyPresenter {
+        UserInfoPresenter(
+            GithubRepositoryImpl(NetworkProvider.userApi),
+            GeekBrainsApp.instance.router
+        )
     }
 
     override fun onCreateView(
@@ -49,15 +51,38 @@ class UserInfoFragment: MvpAppCompatFragment(), UserInfoView{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        showUserProfile(getUserInfo())
+        arguments?.getString(USER_KEY)?.let {
+            presenter.loadUser(it)
+        }
     }
 
     override fun showUserProfile(user: GithubUser) {
-        viewBinding.tvUserLogin.text = user.login
+        viewBinding.apply {
+            tvUserLogin.text = user.login
+            ivUserAvatar.loadImage(user.avatarURL)
+        }
+    }
+
+    override fun showLoading() {
+        viewBinding.apply {
+            tvUserLogin.makeGone()
+            ivUserAvatar.makeGone()
+            progress.makeVisible()
+        }
+    }
+
+    override fun hideLoading() {
+        viewBinding.apply {
+            tvUserLogin.makeVisible()
+            ivUserAvatar.makeVisible()
+            progress.makeGone()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _viewBinding = null
     }
+
+    override fun onBackPressed() = presenter.onBackPressed()
 }

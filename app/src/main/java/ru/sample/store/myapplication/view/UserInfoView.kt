@@ -8,4 +8,6 @@ import ru.sample.store.myapplication.model.GithubUser
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface UserInfoView : MvpView {
     fun showUserProfile(user: GithubUser)
+    fun showLoading()
+    fun hideLoading()
 }

@@ -6,5 +6,5 @@ import ru.sample.store.myapplication.model.GithubUser
 
 interface IScreens {
     fun users(): Screen
-    fun userInfo(user: GithubUser): FragmentScreen
+    fun userInfo(login: String): FragmentScreen
 }

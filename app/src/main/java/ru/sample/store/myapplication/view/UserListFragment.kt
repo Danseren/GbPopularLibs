@@ -1,6 +1,5 @@
 package ru.sample.store.myapplication.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,17 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.sample.store.myapplication.GeekBrainsApp
 import ru.sample.store.myapplication.core.BackPressedListener
+import ru.sample.store.myapplication.core.network.NetworkProvider
 import ru.sample.store.myapplication.databinding.FragmentUserListBinding
+import ru.sample.store.myapplication.model.GithubUser
 import ru.sample.store.myapplication.presenter.UserPresenter
 import ru.sample.store.myapplication.repository.impl.GithubRepositoryImpl
+import ru.sample.store.myapplication.utils.makeGone
+import ru.sample.store.myapplication.utils.makeVisible
 
-class UserListFragment: MvpAppCompatFragment(), UserView, BackPressedListener {
+class UserListFragment : MvpAppCompatFragment(), UserView, BackPressedListener {
 
-    companion object{
+    companion object {
         fun getInstance(): UserListFragment {
             return UserListFragment()
         }
@@ -28,10 +31,13 @@ class UserListFragment: MvpAppCompatFragment(), UserView, BackPressedListener {
             return _viewBinding!!
         }
 
-    private val presenter: UserPresenter by moxyPresenter {
-        UserPresenter(GithubRepositoryImpl(), GeekBrainsApp.instance.router)
+    private val adapter = UserListAdapter {
+        presenter.onItemClicked(it)
     }
-    private var adapter: UserListAdapter? = null
+
+    private val presenter: UserPresenter by moxyPresenter {
+        UserPresenter(GithubRepositoryImpl(NetworkProvider.userApi), GeekBrainsApp.instance.router)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,10 +48,26 @@ class UserListFragment: MvpAppCompatFragment(), UserView, BackPressedListener {
         return viewBinding.root
     }
 
-    override fun initList() {
-        _viewBinding?.rvGithubUsers?.layoutManager = LinearLayoutManager(context)
-        adapter = UserListAdapter(presenter.userListPresenter)
-        _viewBinding?.rvGithubUsers?.adapter = adapter
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        with(viewBinding) {
+            rvGithubUsers.layoutManager = LinearLayoutManager(requireContext())
+            rvGithubUsers.adapter = adapter
+        }
+    }
+
+    override fun initList(list: List<GithubUser>) {
+        adapter.users = list
+    }
+
+    override fun showLoading() = with(viewBinding){
+        rvGithubUsers.makeGone()
+        progress.makeVisible()
+    }
+
+    override fun hideLoading() = with(viewBinding){
+        rvGithubUsers.makeVisible()
+        progress.makeGone()
     }
 
     override fun onBackPressed(): Boolean = presenter.onBackPressed()
@@ -55,8 +77,4 @@ class UserListFragment: MvpAppCompatFragment(), UserView, BackPressedListener {
         _viewBinding = null
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun updateList() {
-        adapter?.notifyDataSetChanged()
-    }
 }
