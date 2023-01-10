@@ -1,15 +1,17 @@
-package ru.sample.store.myapplication.view
+package ru.sample.store.myapplication.view.userinfo
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.sample.store.myapplication.GeekBrainsApp
 import ru.sample.store.myapplication.core.BackPressedListener
 import ru.sample.store.myapplication.core.network.NetworkProvider
 import ru.sample.store.myapplication.databinding.FragmentUserInfoBinding
+import ru.sample.store.myapplication.model.GithubRepo
 import ru.sample.store.myapplication.model.GithubUser
 import ru.sample.store.myapplication.presenter.UserInfoPresenter
 import ru.sample.store.myapplication.repository.impl.GithubRepositoryImpl
@@ -33,6 +35,10 @@ class UserInfoFragment : MvpAppCompatFragment(), UserInfoView, BackPressedListen
             return _viewBinding!!
         }
 
+    private val adapter = RepoAdapter {
+        presenter.onRepoClicked(it)
+    }
+
     val presenter by moxyPresenter {
         UserInfoPresenter(
             GithubRepositoryImpl(NetworkProvider.userApi),
@@ -54,12 +60,17 @@ class UserInfoFragment : MvpAppCompatFragment(), UserInfoView, BackPressedListen
         arguments?.getString(USER_KEY)?.let {
             presenter.loadUser(it)
         }
+        viewBinding.apply {
+            rvRepos.layoutManager = LinearLayoutManager(requireContext())
+            rvRepos.adapter = adapter
+        }
     }
 
-    override fun showUserProfile(user: GithubUser) {
+    override fun showUserProfile(user: GithubUser, repo: List<GithubRepo>) {
         viewBinding.apply {
             tvUserLogin.text = user.login
             ivUserAvatar.loadImage(user.avatarURL)
+            adapter.repos = repo
         }
     }
 

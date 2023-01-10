@@ -6,7 +6,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import moxy.MvpPresenter
 import ru.sample.store.myapplication.core.navigation.UsersScreen
 import ru.sample.store.myapplication.repository.GithubRepository
-import ru.sample.store.myapplication.view.UserInfoFragment
 import ru.sample.store.myapplication.view.UserView
 
 class UserPresenter(

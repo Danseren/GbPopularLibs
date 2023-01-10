@@ -1,4 +1,4 @@
-package ru.sample.store.myapplication.view
+package ru.sample.store.myapplication.view.userlist
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

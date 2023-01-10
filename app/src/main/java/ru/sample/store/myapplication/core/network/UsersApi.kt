@@ -12,4 +12,6 @@ interface UsersApi {
     @GET("/users/{login}")
     fun getUser(@Path("login") login: String): Single<UserDto>
 
+    @GET("/users/{login}/repos")
+    fun getRepo(@Path("login") login: String): Single<List<RepoDto>>
 }

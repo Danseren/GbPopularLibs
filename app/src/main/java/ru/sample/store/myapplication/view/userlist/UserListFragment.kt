@@ -1,4 +1,4 @@
-package ru.sample.store.myapplication.view
+package ru.sample.store.myapplication.view.userlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +16,7 @@ import ru.sample.store.myapplication.presenter.UserPresenter
 import ru.sample.store.myapplication.repository.impl.GithubRepositoryImpl
 import ru.sample.store.myapplication.utils.makeGone
 import ru.sample.store.myapplication.utils.makeVisible
+import ru.sample.store.myapplication.view.UserView
 
 class UserListFragment : MvpAppCompatFragment(), UserView, BackPressedListener {
 
